@@ -1,0 +1,57 @@
+#!/bin/bash
+
+##
+# Author: Ali Okan Yuksel
+##
+
+function print_usage() {
+        echo 'Usage:
+Get daily log size:
+'$0' ls 2020-12-19 2020-12-22
+
+Move logs:
+'$0' mv 2020-12-19 2020-12-22 <target-host>'
+}
+
+
+function check_size() {
+	cd /store/ariel/events
+	echo INFO check daily log size for $d
+	for d in $@; do
+		du -sh payloads/$d
+		du -sh records/$d
+	done
+	for d in $@; do
+	        echo $(du -sh -c $(find records/$d -type d -name lucene -o -name super) |grep total|awk '{print $1}')   records/lucene+super
+	done
+	echo
+}
+
+case $1 in
+            ls)
+		if [[ -z "$2" ]]; then 
+			d="$(date "+%Y/%m/%d")"
+			check_size $d
+		elif [[ ! -z "$2" ]]; then 
+			pat="^[0-9]$"
+			if [[ $2 =~ $pat ]]; then
+				d="$(date "+%Y/%m/%d" -d "$2 days ago")"
+				check_size $d
+			else
+				if [[ ! -z "$2" ]] && [[ ! -z $3 ]]; then 
+				d="$2"
+				until [[ $d > "$3" ]]; do 
+				    check_size $(date "+%Y/%m/%d" -d $d)
+				    d=$(date -I -d "$d + 1 day")
+				done	
+				fi
+			fi
+		fi
+                ;;
+            mv)
+		echo move logs
+                ;;
+            *)
+                print_usage
+esac
+
