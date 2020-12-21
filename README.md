@@ -1,4 +1,5 @@
-# ariel script should be located in /store/ariel/events/ folder.
+# About ariel scripts 
+- Should be located in /store/ariel/events/ folder.
 
 
 
