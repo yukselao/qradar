@@ -10,7 +10,16 @@ Get daily log size:
 '$0' ls 2020-12-19 2020-12-22
 
 Move logs:
-'$0' mv 2020-12-19 2020-12-22 <target-host>'
+'$0' mv 2020-12-19 2020-12-22 <target-host>
+
+Backup logs:
+'$0' backup 2020-12-19 2020-12-22 <target-folder>
+
+Backup logs without index:
+'$0' backupwi 2020-12-19 2020-12-22 <target-folder>
+
+Restore logs:
+'$0' restore 2020-12-19 2020-12-22 <source-folder>'
 }
 
 
@@ -50,6 +59,9 @@ case $1 in
                 ;;
             mv)
 		echo move logs
+                ;;
+            -h)
+		print_usage
                 ;;
             *)
                 print_usage
