@@ -8,14 +8,19 @@ echo 'Usage:
 --
 Delete minute, super indexes:'
 echo $0 -d '"2021/12/13 11:00" 60'
-echo 'Rebuild minute, super indexes:'
+echo '
+Rebuild minute, super indexes:'
 echo $0 -db '"2021/12/13 11:00" 60'
-echo 'List API search caches:'
+echo '
+List API search caches with AQLs:'
 echo $0 -apicachelist
-echo 'Perform a search and check dataFilecounter:'
+echo '
+Delete a API search cache:'
+echo $0 -ds 732c9c2a-c0f1-49e6-8e20-3d4568cecea4
+echo '
+Perform a search and check dataFilecounter:'
 echo $0 -checkdatafilecount 1991 '"2021-12-13 10:00:00" "2021-12-13 10:59:00" 0.2.0.1'
 exit 0
-
 
 elif [[ "$1" == "-ds" ]]; then
 searchid="$2"
