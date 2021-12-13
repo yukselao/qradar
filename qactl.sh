@@ -1,7 +1,7 @@
 #!/bin/bash
 
 consoleip="10.10.2.10"
-apitoken="7d9b79cb-304c-43c6-a8ab-2e8fbdedd7aa"
+apitoken="7d9b79cb-304c-43c6-a8ab-2e8fbdedd7aa" # lab 
 
 echo $apitoken > /tmp/mytoken
 if [[ "$1" == "-h" ]]; then
