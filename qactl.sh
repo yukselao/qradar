@@ -1,8 +1,9 @@
 #!/bin/bash
 
 consoleip="10.10.2.10"
+apitoken="7d9b79cb-304c-43c6-a8ab-2e8fbdedd7aa"
 
-
+echo $apitoken > /tmp/mytoken
 if [[ "$1" == "-h" ]]; then
 echo 'Usage:
 --
@@ -24,7 +25,7 @@ exit 0
 
 elif [[ "$1" == "-ds" ]]; then
 searchid="$2"
-curl -k -S -X DELETE -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches/$searchid" --header "SEC: $(cat /root/token)"
+curl -k -S -X DELETE -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches/$searchid" --header "SEC: $apitoken"
 
 
 elif [[ "$1" == "-d" ]]; then
@@ -46,7 +47,7 @@ elif [[ "$1" == "-d" ]]; then
         echo done.
 elif [[ "$1" == "-apicachelist" ]]; then
         i=0
-        for searchid in $(curl -k -S -X GET -H 'Range: items=0-100' -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches" --header "SEC: $(cat /root/token)" 2>/dev/null |jq '.[]' |tr -d '"'); do
+        for searchid in $(curl -k -S -X GET -H 'Range: items=0-100' -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches" --header "SEC: $apitoken" 2>/dev/null |jq '.[]' |tr -d '"'); do
                 i=$((i+1))
                 aql=$(grep $searchid /var/log/audit/audit.log |grep -o "AQL:.*")
                 if [[ "$aql" != "" ]]; then
@@ -92,7 +93,7 @@ cd /transient/ariel_proxy.ariel_proxy_server/data
 
 echo INFO Checking related searches
 
-for searchid in $(curl -k -S -X GET -H 'Range: items=0-100' -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches" --header "SEC: $(cat /root/token)" 2>/dev/null |jq '.[]' |tr -d '"'); do
+for searchid in $(curl -k -S -X GET -H 'Range: items=0-100' -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches" --header "SEC: $apitoken" 2>/dev/null |jq '.[]' |tr -d '"'); do
         grep $searchid /var/log/audit/audit.log |grep $key &>/dev/null
         if [[ $? -eq 0 ]]; then
                 echo Related search detected $searchid
@@ -107,11 +108,11 @@ echo
 echo INFO Performing search
 
 if [[ "$hostid" == "" ]]; then
-        echo /opt/qradar/bin/ariel_query -f /root/token -q "select $key from events where sourceip='$ip' START '$start' STOP '$end'"
-        /opt/qradar/bin/ariel_query -f /root/token -q "select $key from events where sourceip='$ip' START '$start' STOP '$end'" &>/dev/null
+        echo /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end'"
+        /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end'" &>/dev/null
 else
-        echo /opt/qradar/bin/ariel_query -f /root/token -q "select $key from events where sourceip='$ip' START '$start' STOP '$end' PARAMETERS REMOTESERVERS='$hostid'"
-        /opt/qradar/bin/ariel_query -f /root/token -q "select $key from events where sourceip='$ip' START '$start' STOP '$end' PARAMETERS REMOTESERVERS='$hostid'" &>/dev/null
+        echo /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end' PARAMETERS REMOTESERVERS='$hostid'"
+        /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end' PARAMETERS REMOTESERVERS='$hostid'" &>/dev/null
 
 fi
 echo
