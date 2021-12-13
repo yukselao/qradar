@@ -4,12 +4,18 @@ consoleip="10.10.2.10"
 
 
 if [[ "$1" == "-h" ]]; then
-echo Usage:
+echo 'Usage:
+--
+Delete minute, super indexes:'
 echo $0 -d '"2021/12/13 11:00" 60'
+echo 'Rebuild minute, super indexes:'
 echo $0 -db '"2021/12/13 11:00" 60'
+echo 'List API search caches:'
 echo $0 -apicachelist
+echo 'Perform a search and check dataFilecounter:'
 echo $0 -checkdatafilecount 1991 '"2021-12-13 10:00:00" "2021-12-13 10:59:00" 0.2.0.1'
 exit 0
+
 
 elif [[ "$1" == "-ds" ]]; then
 searchid="$2"
