@@ -92,33 +92,38 @@ cd /transient/ariel_proxy.ariel_proxy_server/data
 
 
 echo INFO Checking related searches
-
 for searchid in $(curl -k -S -X GET -H 'Range: items=0-100' -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches" --header "SEC: $apitoken" 2>/dev/null |jq '.[]' |tr -d '"'); do
+        #echo INFO checking $searchid
         grep $searchid /var/log/audit/audit.log |grep $key &>/dev/null
         if [[ $? -eq 0 ]]; then
                 echo Related search detected $searchid
                 grep $searchid /var/log/audit/audit.log |grep $key |awk '{ print $1" "$2" "$3}'
                 grep $searchid /var/log/audit/audit.log |grep $key |grep -o 'AQL:.*'
+                #echo RAW log:
+                #grep $searchid /var/log/audit/audit.log |grep $key |awk '{ print $1" "$2" "$3}'
         fi
 done
 echo done.
 echo
 echo
 
-echo INFO Performing search
 
 if [[ "$hostid" == "" ]]; then
+        echo INFO Performing search
         echo /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end'"
-        /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end'" &>/dev/null
+        echo Result:
+        /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end'" 2>/dev/null
 else
         echo /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end' PARAMETERS REMOTESERVERS='$hostid'"
-        /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end' PARAMETERS REMOTESERVERS='$hostid'" &>/dev/null
+        echo Result:
+        /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end' PARAMETERS REMOTESERVERS='$hostid'" 2>/dev/null
 
 fi
 echo
 echo INFO Checking dataFileCount stats in meta file...
 metafile="$(ls -1 $(find /transient/ariel_proxy.ariel_proxy_server/data -name "*.alias" -type f -exec grep -l $key {} \; 2>/dev/null |awk -F '~' '{print $1}')*.meta 2>/dev/null |tail -1)"
-datafilecount=$(cat $metafile |sed -r 's#.*<dataFileCount>(.+)</dataFileCount>.*#\1#')
+
+[[ "$metafile" != "" ]] && datafilecount=$(cat $metafile |sed -r 's#.*<dataFileCount>(.+)</dataFileCount>.*#\1#') || datafilecount="-"
 echo "$key;$metafile;$datafilecount"
 echo done.
 fi
