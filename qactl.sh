@@ -1,7 +1,7 @@
 #!/bin/bash
 
 consoleip="10.10.2.10"
-apitoken="7d9b79cb-304c-43c6-a8ab-2e8fbdedd7aa" # lab 
+apitoken="7d9b79cb-304c-43c6-a8ab-2e8fbdedd7aa"
 
 echo $apitoken > /tmp/mytoken
 if [[ "$1" == "-h" ]]; then
@@ -46,12 +46,18 @@ elif [[ "$1" == "-d" ]]; then
         /opt/qradar/bin/ariel_offline_indexer.sh -n events -v -t "$enddate" -d $3 -s -r
         echo done.
 elif [[ "$1" == "-apicachelist" ]]; then
+        key="$2"
+        #curl -k -S -X GET -H 'Range: items=0-10000' -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches" --header "SEC: $apitoken" 2>/dev/null   |jq '.[]' |tr -d '"'
         i=0
         for searchid in $(curl -k -S -X GET -H 'Range: items=0-100' -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches" --header "SEC: $apitoken" 2>/dev/null |jq '.[]' |tr -d '"'); do
                 i=$((i+1))
-                aql=$(grep $searchid /var/log/audit/audit.log |grep -o "AQL:.*")
+                #echo INFO searchid=$searchid
+                aql="$(curl -k -S -X POST -H "SEC: $apitoken" -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches/$searchid" 2>/dev/null | jq '.query_string')"
                 if [[ "$aql" != "" ]]; then
-                        echo SearchId: $searchid:, $aql
+                                echo SearchId: $searchid:, $aql >> all-searches.out
+                                echo INFO delete $searchid
+                                curl -k -S -X DELETE -H "SEC: $apitoken" -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches/$searchid" 2>/dev/null | jq '.status'
+
                 fi
         done
         exit 0
@@ -110,21 +116,20 @@ echo
 
 if [[ "$hostid" == "" ]]; then
         echo INFO Performing search
-        echo /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end'"
+        aql="select $key from events where sourceip='$ip' START '$start' STOP '$end'"
         echo Result:
-        /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end'" 2>/dev/null
+        datafilecount="$(curl -k -S -X POST -H "SEC: $apitoken" -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches" --data-urlencode "query_expression=$aql" 2>/dev/null | jq '.data_file_count')"
+# increase HEAP size offline indexer
 else
-        echo /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end' PARAMETERS REMOTESERVERS='$hostid'"
+        echo CMD:
         echo Result:
-        /opt/qradar/bin/ariel_query -f /tmp/mytoken -q "select $key from events where sourceip='$ip' START '$start' STOP '$end' PARAMETERS REMOTESERVERS='$hostid'" 2>/dev/null
+        aql="select $key from events where sourceip='$ip' START '$start' STOP '$end' PARAMETERS REMOTESERVERS='$hostid'"
+        datafilecount="$(curl -k -S -X POST -H "SEC: $apitoken" -H 'Version: 16.0' -H 'Accept: application/json' "https://$consoleip/api/ariel/searches" --data-urlencode "query_expression=$aql" 2>/dev/null | jq '.data_file_count')"
 
 fi
 echo
-echo INFO Checking dataFileCount stats in meta file...
-metafile="$(ls -1 $(find /transient/ariel_proxy.ariel_proxy_server/data -name "*.alias" -type f -exec grep -l $key {} \; 2>/dev/null |awk -F '~' '{print $1}')*.meta 2>/dev/null |tail -1)"
-
-[[ "$metafile" != "" ]] && datafilecount=$(cat $metafile |sed -r 's#.*<dataFileCount>(.+)</dataFileCount>.*#\1#') || datafilecount="-"
-echo "$key;$metafile;$datafilecount"
+echo INFO dataFileCount is $datafilecount...
+echo "$key;$aql;$datafilecount"
 echo done.
 fi
 exit 0
