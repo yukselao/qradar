@@ -77,9 +77,11 @@ getsrcip(ret["source_address_ids"])
 print("Local Destination IPs: ")
 getlocaldstip(ret["local_destination_address_ids"])
 
+##
 #TODO
+##
 # 1. Get Remote IPs
-# 2. Get last logged in usernames for the IP
+# 2. Get last logged in usernames for the IP - Login Success /Category
 # 3. Check if ip address communicated with critical assets
-
-
+# 4. IP adresine ait farklı offense'ler varsa onları göstermeli.
+#
