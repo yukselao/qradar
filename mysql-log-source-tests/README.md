@@ -13,13 +13,13 @@ I have created two scripts. insert.sh and select.sh. insert.sh is used for inser
 
 Before starting tests you should create database and database user.
 
-## create user and grant access for testdb
+## Create user and grant access for testdb
 ```
 CREATE USER 'testdbuser'@'%' IDENTIFIED BY '9yLX795du%8b';
 ALTER USER 'testdbuser'@'%' IDENTIFIED WITH mysql_native_password BY '9yLX795du%8b';
 GRANT ALL ON testdb.* TO 'testdbuser'@'%';
 ```
-## create user table and insert sample data
+## Create user table and insert sample data
 ```
 user testdb;
 CREATE TABLE `user` (
@@ -68,7 +68,7 @@ select.sh usage:
 
 
 
-Log Source settings:
+## Log Source settings:
 
 ![image](https://user-images.githubusercontent.com/2484823/163124517-306c31fe-a340-406a-bbed-81b8c037e4a8.png)
 
