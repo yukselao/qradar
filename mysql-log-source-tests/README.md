@@ -62,6 +62,7 @@ Log Source settings:
 
 ![image](https://user-images.githubusercontent.com/2484823/163124517-306c31fe-a340-406a-bbed-81b8c037e4a8.png)
 
+Log Source management legacy interface url:
 
-
+https://XX.XX.XX.XX/console/do/core/genericsearchlist?appName=eventviewer&pageId=SensorDeviceList
 
