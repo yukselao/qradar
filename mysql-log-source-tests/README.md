@@ -1,10 +1,12 @@
 
 # create user and grant access for testdb
+```
 CREATE USER 'testdbuser'@'%' IDENTIFIED BY '9yLX795du%8b';
 ALTER USER 'testdbuser'@'%' IDENTIFIED WITH mysql_native_password BY '9yLX795du%8b';
 GRANT ALL ON testdb.* TO 'testdbuser'@'%';
-
+```
 # create user table and insert sample data
+```
 user testdb;
 CREATE TABLE `user` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -22,3 +24,4 @@ INSERT INTO `user` (`employee_id`, `user_type`, `username`, `password`) VALUES
                    (4, 'NORMAL', 'asya', 'password4'),
                    (7, 'ADMIN', 'emel', 'password5'),
                    (8, 'NORMAL', 'kartal', 'password6');
+```
