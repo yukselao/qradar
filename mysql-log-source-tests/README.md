@@ -25,3 +25,5 @@ INSERT INTO `user` (`employee_id`, `user_type`, `username`, `password`) VALUES
                    (7, 'ADMIN', 'emel', 'password5'),
                    (8, 'NORMAL', 'kartal', 'password6');
 ```
+
+:octocat:
