@@ -4,7 +4,7 @@ If you cannot collect logs from MySQL table, I strongly suggest you reviewing or
 
 https://www.ibm.com/docs/en/dsm?topic=one-jdbc-protocol-configuration-options
 
-I solved a communication issue for a customer by upgrading mysql driver version from mysql-connector-java-5.1.48 to mysql-connector-java-5.1.49.
+I solved a communication issue for a customer by upgrading mysql connector version from mysql-connector-java-5.1.48 to mysql-connector-java-5.1.49.
 
 https://dev.mysql.com/downloads/connector/j/
 
