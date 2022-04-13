@@ -1,11 +1,13 @@
 
-I have created two scripts. insert.sh and select.sh
-
-insert.sh is used for inserting sample data to user table.
-
-select.sh is used for viewing data in the user table.
+I have created two scripts. insert.sh and select.sh. insert.sh is used for inserting sample data to user table. select.sh is used for viewing data in the user table.
 
 Before starting tests you should create database and database user.
+
+Log Source settings:
+
+![image](https://user-images.githubusercontent.com/2484823/163124517-306c31fe-a340-406a-bbed-81b8c037e4a8.png)
+
+
 
 ## create user and grant access for testdb
 ```
