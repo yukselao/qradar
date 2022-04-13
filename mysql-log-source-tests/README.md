@@ -1,5 +1,14 @@
 Let's say you are working on a scenario where you want to redirect a stream from a table in a mysql database to QRadar. In this case, you may want to test whether the stream is working properly. The contents in this project were created to test whether data is transmitted over the stream in a healthy way.
 
+If you cannot collect logs from MySQL table, I strongly suggest you reviewing original DSM documentation:
+
+https://www.ibm.com/docs/en/dsm?topic=one-jdbc-protocol-configuration-options
+
+I solved a communication issue by upgrading mysql driver version from mysql-connector-java-5.1.48 to mysql-connector-java-5.1.49.
+
+https://dev.mysql.com/downloads/connector/j/
+
+
 I have created two scripts. insert.sh and select.sh. insert.sh is used for inserting sample data to user table. select.sh is used for viewing data in the user table.
 
 Before starting tests you should create database and database user.
