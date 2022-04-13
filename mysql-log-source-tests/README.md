@@ -1,4 +1,12 @@
 
+I have created two scripts. insert.sh and select.sh
+
+insert.sh is used for inserting sample data to user table.
+
+select.sh is used for viewing data in the user table.
+
+Before starting tests you should create database and database user.
+
 ## create user and grant access for testdb
 ```
 CREATE USER 'testdbuser'@'%' IDENTIFIED BY '9yLX795du%8b';
