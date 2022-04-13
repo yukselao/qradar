@@ -1,11 +1,11 @@
 
-# create user and grant access for testdb
+## create user and grant access for testdb
 ```
 CREATE USER 'testdbuser'@'%' IDENTIFIED BY '9yLX795du%8b';
 ALTER USER 'testdbuser'@'%' IDENTIFIED WITH mysql_native_password BY '9yLX795du%8b';
 GRANT ALL ON testdb.* TO 'testdbuser'@'%';
 ```
-# create user table and insert sample data
+## create user table and insert sample data
 ```
 user testdb;
 CREATE TABLE `user` (
