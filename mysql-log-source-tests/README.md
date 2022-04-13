@@ -1,3 +1,4 @@
+Let's say you are working on a scenario where you want to redirect a stream from a table in a mysql database to QRadar. In this case, you may want to test whether the stream is working properly. The contents in this project were created to test whether data is transmitted over the stream in a healthy way.
 
 I have created two scripts. insert.sh and select.sh. insert.sh is used for inserting sample data to user table. select.sh is used for viewing data in the user table.
 
