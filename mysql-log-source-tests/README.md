@@ -3,6 +3,33 @@ I have created two scripts. insert.sh and select.sh. insert.sh is used for inser
 
 Before starting tests you should create database and database user.
 
+
+insert.sh usage:
+```
+[root@IBM-QRadar mysql-test]#  ./insert.sh <record-count> <sleep-in-seconds>
+```
+
+select.sh usage:
+```
+[root@IBM-QRadar mysql-test]# ./select.sh
++----+-------------+------------+----------+--------------+
+| id | employee_id | user_type  | username | password     |
++----+-------------+------------+----------+--------------+
+| 17 |        NULL | testuser10 | testuser | testpassword |
+| 16 |        NULL | testuser9  | testuser | testpassword |
+| 15 |        NULL | testuser8  | testuser | testpassword |
+| 14 |        NULL | testuser7  | testuser | testpassword |
+| 13 |        NULL | testuser6  | testuser | testpassword |
+| 12 |        NULL | testuser5  | testuser | testpassword |
+| 11 |        NULL | testuser4  | testuser | testpassword |
+| 10 |        NULL | testuser3  | testuser | testpassword |
+|  9 |        NULL | testuser2  | testuser | testpassword |
+|  8 |        NULL | testuser1  | testuser | testpassword |
++----+-------------+------------+----------+--------------+
+```
+
+
+
 Log Source settings:
 
 ![image](https://user-images.githubusercontent.com/2484823/163124517-306c31fe-a340-406a-bbed-81b8c037e4a8.png)
