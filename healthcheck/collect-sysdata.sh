@@ -10,7 +10,7 @@ function getepsdata() {
 	echo $(date "+%F %T") > $logfile
 	echo $cmd >> $logfile
 	echo "INFO run -> eval ssh $1 '$cmd'"
-	eval ssh $1 "$cmd" &>> $logfile
+	eval ssh -o StrictHostKeyChecking=no $1 "$cmd" &>> $logfile
 	ret=$?
 	if [ $ret -ne 0 ]; then
 		echo "ERROR in cmd: eval ssh $1 '$cmd'" 
@@ -25,7 +25,7 @@ function getinfo() {
 	logfile=$logdir/$3
 	echo $(date "+%F %T") > $logfile
 	echo $cmd >> $logfile
-	eval ssh $1 "$cmd" &>> $logfile
+	eval ssh -o StrictHostKeyChecking=no $1 "$cmd" &>> $logfile
 }
 
 
@@ -42,7 +42,7 @@ for host in ${hosts[@]}; do
 	getinfo $host "iostat 1 10" "iostat.log"
 	getinfo $host "/opt/qradar/bin/myver -v" "qradar-version.log"
 	logdir=/tmp/sysdata/$1
-	scp -r $host:/var/log/systemStabMon/$(date "+%Y/%m/%d") $logdir/stats-$(date "+%Y-%m-%d")
+	scp -o StrictHostKeyChecking=no -r $host:/var/log/systemStabMon/$(date "+%Y/%m/%d") $logdir/stats-$(date "+%Y-%m-%d")
 done
 
 
