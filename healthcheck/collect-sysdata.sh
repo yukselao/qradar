@@ -1,5 +1,4 @@
 #!/bin/bash
-
 cwd=$(pwd)
 /bin/rm -fr /tmp/sysdata
 
@@ -48,24 +47,28 @@ function getinfo() {
 	fi
 }
 
-
-
 hosts=($(psql -U qradar -c "select ip from managedhost where status='Active'" -t |tr -d ' ' |grep -v "^$" | tr '\n' ' '))
 for host in ${hosts[@]}; do
 	echo INFO collecting EPS data...
 	getepsdata $host
+	
 	echo INFO collecting CPU info...
 	getinfo $host "lscpu" "cpu-info.log"
+	
 	echo INFO collecting volume information...
 	getinfo $host "lvs" "logical-volume-info.log"
+	
 	echo INFO collecting disk usage information...
 	getinfo $host "df -h" "disk-usage.log"
+
 	echo INFO collecting memory information...
 	getinfo $host "free -g" "memory-usage.log"
+	
 	echo INFO collecting qradar version information...
 	getinfo $host "/opt/qradar/bin/myver -v" "qradar-version.log"
-	logdir=/tmp/sysdata/$host
+	
 	echo INFO collecting systemStabMon information for today...
+	logdir=/tmp/sysdata/$host	
 	if [[ "$(isconsole)" == "true" ]]; then
 		/bin/cp -r $host:/var/log/systemStabMon/$(date "+%Y/%m/%d") $logdir/stats-$(date "+%Y-%m-%d")
 	else
@@ -75,9 +78,6 @@ for host in ${hosts[@]}; do
 	echo done.
 done
 
-
 tar -pczf /tmp/sysdata.tgz /tmp/sysdata
-
 du -sh /tmp/sysdata.tgz
-
 echo Share this file with us
