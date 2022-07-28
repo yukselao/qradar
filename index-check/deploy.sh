@@ -7,7 +7,7 @@ if [[ -z "$1" ]]; then
 '
         exit 1
 
-hostlist=(gunlogep01 gunlogdn01 gunlogdn02)
+hostlist=(xlogep01 xlogdn01 xlogdn02)
 
 for h in ${hostlist[@]}; do
 
